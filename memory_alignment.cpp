@@ -129,8 +129,10 @@ int main()
     // 2. 객체 크기는 가장 큰 멤버 변수 크기 배수 크기를 가짐.
     // https://learn.microsoft.com/ko-kr/cpp/cpp/alignment-cpp-declarations?view=msvc-170#alignof-and-alignas
 
-    // aligns : 여러 alignas 개 적용된 경우 결과 맞춤은
-    // 모든 alignas 값 중에서 가장 크며 적용된 형식의 자연 맞춤보다 작을 수 없습니다.
+    // alignas
+    // - 여러 alignas 개 적용된 경우 결과 맞춤은
+    //   모든 alignas 값 중에서 가장 크며 적용된 형식의 자연 맞춤보다 작을 수 없습니다.
+    // - 캐시라인에 맞추어, false sharing 문제를 피하기 위해 사용.
     // https://learn.microsoft.com/ko-kr/cpp/cpp/alignas-specifier?view=msvc-170
 
     test1();
