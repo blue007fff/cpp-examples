@@ -13,6 +13,7 @@
         "-Wpedantic", // iso 표준 준수.
         //"-pedantic",
         //"-pedantic-errors", // "-Werror",-Wpedantic" 와 동일.
+        //"-O2",
         "-g",
         "${file}",
         "-o",
