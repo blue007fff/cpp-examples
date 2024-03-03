@@ -9,7 +9,7 @@
         "-std=c++20",
         "-Wall",
         //"-Wextra",
-        "-Werror",
+        //"-Werror",
         "-Wpedantic", // iso 표준 준수.
         //"-pedantic",
         //"-pedantic-errors", // "-Werror",-Wpedantic" 와 동일.
