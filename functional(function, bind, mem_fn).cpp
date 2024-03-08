@@ -39,6 +39,18 @@ void print_function_type()
     std::cout << "std::function<void()> fn6 = std::bind(print_num, 314): "
               << typeid(fn6).name() << std::endl;
 
+    auto fn7 = std::mem_fn(Foo::print_add);
+    std::cout << "auto fn7 = std::mem_fn(Foo::print_add): "
+              << typeid(fn7).name() << std::endl;
+
+    auto fn8 = &Foo::print_add;
+    std::cout << "auto fn8 = &Foo::print_add: "
+              << typeid(fn8).name() << std::endl;
+
+    std::function<void(const Foo &, int)> fn9 = &Foo::print_add;
+    std::cout << "std::function<void(const Foo &, int)> fn9 = &Foo::print_add: "
+              << typeid(fn9).name() << std::endl;
+
     std::cout << std::endl;
     std::cout << "std::function<void()>: " << typeid(std::function<void()>).name() << std::endl;
     std::cout << "std::function<void(int)>: " << typeid(std::function<void(int)>).name() << std::endl;
