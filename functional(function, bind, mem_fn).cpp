@@ -109,15 +109,8 @@ void function_examples()
     std::cout << '\n';
 }
 
-void add(int x, int y)
-{
-    std::cout << x << " + " << y << " = " << x + y << std::endl;
-}
-
-void subtract(int x, int y)
-{
-    std::cout << x << " - " << y << " = " << x - y << std::endl;
-}
+void add(int x, int y) { std::cout << x << " + " << y << " = " << x + y << std::endl; }
+void sub(int x, int y) { std::cout << x << " - " << y << " = " << x - y << std::endl; }
 
 struct S
 {
@@ -125,6 +118,11 @@ struct S
     S(int data) : data(data) { std::cout << "S: 일반 생성자!" << std::endl; }
     S(const S &s) : data{s.data} { std::cout << "S: 복사 생성자!" << std::endl; }
     S(S &&s) : data{s.data} { std::cout << "S: 이동 생성자!" << std::endl; }
+    void func1(const S &s2)
+    {
+        data += s2.data + 3;
+        std::cout << "S::data: " << data << std::endl;
+    }
 };
 void do_something(S &s1, const S &s2)
 {
@@ -135,37 +133,50 @@ void bind_memfn_examples()
 {
     std::cout << __FUNCTION__ << " ===========================" << std::endl;
 
-    auto add_with_2 = std::bind(add, 2, std::placeholders::_1);
-    add_with_2(3);
-    add_with_2(3, 4, 5); // 두 번째 인자 부터는 무시된다.
+    auto add_2_y = std::bind(add, 2, std::placeholders::_1);
+    add_2_y(3);
+    add_2_y(3, 4, 5); // 두 번째 인자 부터는 무시된다.
 
-    auto subtract_from_2 = std::bind(subtract, std::placeholders::_1, 2);
-    auto negate = std::bind(subtract, std::placeholders::_2, std::placeholders::_1);
-
-    subtract_from_2(3); // 3 - 2 를 계산한다.
-    negate(4, 2);       // 2 - 4 를 계산한다
+    auto sub_x_2 = std::bind(sub, std::placeholders::_1, 2);
+    auto sub_y_x = std::bind(sub, std::placeholders::_2, std::placeholders::_1);
+    sub_x_2(3);    // 3 - 2 를 계산한다.
+    sub_y_x(4, 2); // 2 - 4 를 계산한다
 
     S s1(1), s2(2);
-
     std::cout << "Before : " << s1.data << std::endl;
     // s1 이 그대로 전달된 것이 아니라 s1 의 복사본이 전달되고, 유지됨!
     // auto do_something_with_s1 = std::bind(do_something, s1, std::placeholders::_1);
     auto do_something_with_s1 = std::bind(do_something, std::ref(s1), std::placeholders::_1);
+    // auto do_something_with_s1 = std::bind(do_something, &s1, std::placeholders::_1); // error
+
     do_something_with_s1(s2);
     do_something_with_s1(s2);
     std::cout << "After :: " << s1.data << std::endl;
-}
 
+    std::cout << "Before : " << s1.data << std::endl;
+    // auto s_func1 = std::bind(&S::func1, s1, std::placeholders::_1);
+    auto s_func1 = std::bind(&S::func1, &s1, std::placeholders::_1);
+    // - 멤버함수에서는 &s1 이 동작함, 위의 함수에서는 안됨.
+    s_func1(s2);
+    s_func1(s2);
+    std::cout << "After :: " << s1.data << std::endl;
+
+    int num10 = 10;
+    auto fn_print_num_num10 = std::bind(print_num, num10);               // 이미 복사.
+    auto fn_print_num_ref_num10 = std::bind(print_num, std::ref(num10)); // 계속 참조.
+    num10 = 20;
+    fn_print_num_num10();     // 10
+    fn_print_num_ref_num10(); // 20
+}
 int main()
 {
-    // store a call to a member function
-    // https://modoocode.com/254
-    // - 멤버 함수들은 구현 상 자신을 호출한 객체를 인자로 암묵적으로 받고 있음
-    // - 멤버함수는 함수 이름 만으로는 그 주소값을 전달할 수 없습니다.
-    //   이는 C++ 언어 규칙에 때문에 그런데, 멤버 함수가 아닌 모든 함수들의 경우
-    //   함수의 이름이 함수의 주소값으로 암시적 변환이 일어나지만,
-    //   멤버 함수들의 경우 암시적 변환이 발생하지 않으므로
-    //   & 연산자를 통해 명시적으로 주소값을 전달해줘야 합니다.
+    // * 멤버 함수는 구현 상 자신을 호출한 객체를 인자로 암묵적으로 받고 있음.
+    // * 멤버 함수는 함수 이름이 주소값으로 암시적 변환이 불가.
+    //   - & 연산자를 사용하여 명시적으로 주소값을 전달해야 함.
+    // * 멤버 함수를 제외 한 모든 함수는 함수 이름이 주소값으로 암시적으로 변환 가능.
+    // * std::bind(fn, obj,...) 객체 전달 시, 복사본이 전달 됨.
+    //   - std::ref(obj) 를 사용해야 참조본 전달 가능.
+    // * https://modoocode.com/254
 
     print_function_type();
     std::cout << std::endl;
