@@ -15,7 +15,7 @@ void print_vtable(void *object, int n = 5)
 
 void print_memory()
 {
-    std::cout << __FUNCTION__ << std::endl;
+    std::cout << __FUNCTION__ << "==========================" << std::endl;
 
     class Base
     {
@@ -35,7 +35,7 @@ void print_memory()
 
 void print_vtable()
 {
-    std::cout << __FUNCTION__ << std::endl;
+    std::cout << __FUNCTION__ << "==========================" << std::endl;
 
     class Base
     {
@@ -94,9 +94,49 @@ auto base_func1 = &Base::func1;
 #endif
 }
 
+#define BASE_CLASS(ClassName)   \
+    struct ClassName            \
+    {                           \
+        virtual ~ClassName() {} \
+    };
+
+void multiple_inheritance_pointer()
+{
+    std::cout << __FUNCTION__ << "==========================" << std::endl;
+
+    BASE_CLASS(Base1);
+    BASE_CLASS(Base2);
+    struct Child : public Base1, Base2
+    {
+        virtual ~Child(){};
+    };
+
+    Child c1;
+    Base1 *pB1 = &c1;
+    Base2 *pB2 = &c1;
+    Child *pC1 = &c1;
+
+    // Base1 *pB11 = pB2; // compile error
+    Base1 *pB12 = dynamic_cast<Base1 *>(pB2);
+    Base2 *pB21 = dynamic_cast<Base2 *>(pB1);
+
+    std::cout << "pB1 == pC1: " << (pB1 == pC1) << std::endl;
+    std::cout << "pB2 == pC1: " << (pB2 == pC1) << std::endl;
+    std::cout << "(void*)pB1 == (void*)pB2: " << ((void *)pB1 == (void *)pB2) << std::endl;
+
+    std::cout << "pB1: " << pB1 << std::endl;
+    std::cout << "pB2: " << pB2 << std::endl;
+    std::cout << "pC1: " << pC1 << std::endl;
+    std::cout << "pB12: " << pB12 << std::endl;
+    std::cout << "pB21: " << pB21 << std::endl;
+}
+
 int main()
 {
     print_memory();
     print_vtable();
+
+    multiple_inheritance_pointer();
+    // https://dataonair.or.kr/db-tech-reference/d-lounge/technical-data/?mod=document&uid=235880
     return 0;
 }
