@@ -51,6 +51,7 @@
     "sstream": "cpp",
     "stop_token": "cpp",
     "thread": "cpp",
-    "iomanip": "cpp"
+    "iomanip": "cpp",
+    "map": "cpp"
   }
 }
