@@ -98,6 +98,7 @@ auto base_func1 = &Base::func1;
     struct ClassName            \
     {                           \
         virtual ~ClassName() {} \
+        int m_data;             \
     };
 
 void multiple_inheritance_pointer()
@@ -119,6 +120,10 @@ void multiple_inheritance_pointer()
     // Base1 *pB11 = pB2; // compile error
     Base1 *pB12 = dynamic_cast<Base1 *>(pB2);
     Base2 *pB21 = dynamic_cast<Base2 *>(pB1);
+
+    std::cout << "sizeof(Base1): " << sizeof(Base1) << std::endl;
+    std::cout << "sizeof(Base2): " << sizeof(Base2) << std::endl;
+    std::cout << "sizeof(Child): " << sizeof(Child) << std::endl;
 
     std::cout << "pB1 == pC1: " << (pB1 == pC1) << std::endl;
     std::cout << "pB2 == pC1: " << (pB2 == pC1) << std::endl;
