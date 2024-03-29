@@ -17,6 +17,7 @@ Foo MakeFoo1() { return Foo("MakeFoo1"); }
 Foo MakeFoo2()
 {
     Foo foo("MakeFoo2");
+    std::cout << "&foo: " << &foo << std::endl;
     return foo;
 }
 
@@ -45,6 +46,7 @@ int main()
     {
         std::cout << "copy elision " << std::string(20, '*') << std::endl;
         Foo foo2 = MakeFoo2();
+        std::cout << "&foo2: " << &foo2 << std::endl;
     }
 
     {
