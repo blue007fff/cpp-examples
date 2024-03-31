@@ -20,7 +20,7 @@ void print(const std::vector<T> &list)
 void example_nth_element()
 {
     std::cout << __FUNCTION__ << "==========================" << std::endl;
-    std::vector v{5, 6, 4, 3, 2, 6, 7, 9, 3};
+    std::vector v{5, 10, 6, 4, 3, 2, 6, 7, 9, 3};
     print(v);
 
     auto print_element = [&v](size_t idx)
@@ -53,6 +53,14 @@ void example_nth_element()
 
 int main()
 {
+    // 1. n번째 원소 값이 정렬되었을때 기준 값으로 바뀜.
+    // - n번째 원소만 보장, 다른 원소는 보장하지 않음.
+    // - 수행 후, 다음의 조건을 만족.
+    // - i = [first, n) j = [n, end)
+    // - *j < *i == false, comp(*j, *i) == false 를 보장.
+    // 2. partition 과 비슷하다고 볼수 있는데,
+    // - partition 은 값 기준, nth_element 는 인덱스 기준으로 보면 될듯.
+
     example_nth_element();
     return 0;
 }
