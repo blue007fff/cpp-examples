@@ -39,6 +39,10 @@ void example_partition()
 
 int main()
 {
+    // pred 함수값이 true 인 원소들을 false 인 원소들 앞쪽에 배치.
+    // 유사한 함수로, nth_element() 가 있음.
+    // - partition() 은 값 기준, nth_element() 는 인덱스 기준으로 보면 될듯.
+
     example_partition();
     return 0;
 }
