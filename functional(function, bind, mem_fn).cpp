@@ -14,6 +14,20 @@ struct Foo
     int num_;
 };
 
+void sizeof_function()
+{
+    std::cout << __FUNCTION__ << " ===========================" << std::endl;
+
+    auto func = [](int a, int b) -> int
+    { return a + b; };
+
+    std::function<int(int, int)> fn1 = func;
+    int (*pfunc)(int, int) = func;
+
+    std::cout << "sizeof(std::function) : " << sizeof(fn1) << std::endl;
+    std::cout << "sizeof(int (*)(int, int)) : " << sizeof(pfunc) << std::endl;
+}
+
 void print_function_type()
 {
     std::cout << __FUNCTION__ << " ===========================" << std::endl;
@@ -170,6 +184,7 @@ void bind_memfn_examples()
 }
 int main()
 {
+    // std::function 데이터 크기 : 32(gcc), 64(vc++)
     // * 멤버 함수는 구현 상 자신을 호출한 객체를 인자로 암묵적으로 받고 있음.
     // * 멤버 함수는 함수 이름이 주소값으로 암시적 변환이 불가.
     //   - & 연산자를 사용하여 명시적으로 주소값을 전달해야 함.
@@ -177,6 +192,9 @@ int main()
     // * std::bind(fn, obj,...) 객체 전달 시, 복사본이 전달 됨.
     //   - std::ref(obj) 를 사용해야 참조본 전달 가능.
     // * https://modoocode.com/254
+
+    sizeof_function();
+    std::cout << std::endl;
 
     print_function_type();
     std::cout << std::endl;
